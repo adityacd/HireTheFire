@@ -1,0 +1,33 @@
+# My Resume
+# Edit this file with your actual resume content.
+# It will be used by the AI to generate personalized cover letters.
+
+Name: [Your Name]
+Email: [your@email.com]
+Phone: [Your Phone]
+LinkedIn: [linkedin.com/in/yourprofile]
+GitHub: [github.com/yourusername]
+
+## Summary
+[A brief 2-3 sentence professional summary about yourself.]
+
+## Experience
+
+### [Job Title] — [Company Name]  ([Start Date] – [End Date or Present])
+- [Key responsibility or achievement]
+- [Key responsibility or achievement]
+- [Key responsibility or achievement]
+
+### [Job Title] — [Company Name]  ([Start Date] – [End Date])
+- [Key responsibility or achievement]
+- [Key responsibility or achievement]
+
+## Education
+[Degree] in [Field] — [University Name] ([Year])
+
+## Skills
+[Comma-separated list of relevant skills, e.g., Python, React, SQL, etc.]
+
+## Projects
+### [Project Name]
+[Brief description of the project and your role.]
