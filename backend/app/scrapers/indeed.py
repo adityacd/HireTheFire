@@ -1,77 +1,79 @@
 import logging
+import xml.etree.ElementTree as ET
 from typing import Optional
-from urllib.parse import urlencode, quote_plus
-from bs4 import BeautifulSoup
 from .base import BaseScraper, JobListing
 
 logger = logging.getLogger(__name__)
 
-EXPERIENCE_MAP = {
-    "entry": "entry_level",
-    "mid": "mid_level",
-    "senior": "senior_level",
-}
+# Indeed's RSS feed is reliable and doesn't require JavaScript rendering.
+# fromage=3 means jobs posted in the last 3 days.
+RSS_URL = "https://www.indeed.com/rss"
 
 
 class IndeedScraper(BaseScraper):
     source = "indeed"
-    BASE_URL = "https://www.indeed.com/jobs"
 
     async def scrape(self, title: str, location: str, experience_level: Optional[str] = None) -> list[JobListing]:
-        jobs: list[JobListing] = []
         params = {
             "q": title,
             "l": location,
             "fromage": "3",
             "sort": "date",
         }
-        if experience_level and experience_level in EXPERIENCE_MAP:
-            params["explvl"] = EXPERIENCE_MAP[experience_level]
 
         try:
-            resp = await self.client.get(self.BASE_URL, params=params)
+            resp = await self.client.get(RSS_URL, params=params)
             resp.raise_for_status()
-            jobs = self._parse(resp.text, experience_level)
+            return self._parse(resp.text, experience_level)
         except Exception as e:
             logger.error(f"Indeed scrape failed: {e}")
+            return []
 
-        return jobs
-
-    def _parse(self, html: str, experience_level: Optional[str]) -> list[JobListing]:
-        soup = BeautifulSoup(html, "lxml")
+    def _parse(self, xml_text: str, experience_level: Optional[str]) -> list[JobListing]:
         listings: list[JobListing] = []
+        try:
+            root = ET.fromstring(xml_text)
+        except ET.ParseError as e:
+            logger.error(f"Indeed XML parse error: {e}")
+            return []
 
-        cards = soup.select("div.job_seen_beacon, div[data-testid='jobsearch-ResultsList'] > li")
+        ns = {"georss": "http://www.georss.org/georss"}
 
-        for card in cards:
+        for item in root.findall(".//item"):
             try:
-                title_el = card.select_one("h2.jobTitle span, a.jcs-JobTitle span")
-                company_el = card.select_one("[data-testid='company-name'], span.companyName")
-                location_el = card.select_one("[data-testid='text-location'], div.companyLocation")
-                date_el = card.select_one("[data-testid='myJobsStateDate'], span.date")
-                link_el = card.select_one("h2.jobTitle a, a.jcs-JobTitle")
+                raw_title = (item.findtext("title") or "").strip()
+                url = (item.findtext("link") or "").strip()
+                pub_date = (item.findtext("pubDate") or "Recent").strip()
 
-                if not title_el or not company_el:
+                # RSS title format: "Job Title - Company Name (Location)"
+                # Split on " - " to separate title from company/location
+                if " - " in raw_title:
+                    job_title, rest = raw_title.split(" - ", 1)
+                else:
+                    job_title = raw_title
+                    rest = ""
+
+                # rest is often "Company (Location)" or just "Company"
+                company = rest
+                location_str = ""
+                if "(" in rest and rest.endswith(")"):
+                    company = rest[:rest.rfind("(")].strip()
+                    location_str = rest[rest.rfind("(") + 1:-1].strip()
+
+                if not job_title or not company:
                     continue
 
-                title = title_el.get_text(strip=True)
-                company = company_el.get_text(strip=True)
-                location = location_el.get_text(strip=True) if location_el else "Remote"
-                date_posted = date_el.get_text(strip=True) if date_el else "Recent"
-                href = link_el.get("href", "") if link_el else ""
-                url = f"https://www.indeed.com{href}" if href.startswith("/") else href
-
                 listings.append(JobListing(
-                    title=title,
-                    company=company,
-                    location=location,
-                    date_posted=date_posted,
+                    title=job_title.strip(),
+                    company=company.strip(),
+                    location=location_str or "See listing",
+                    date_posted=pub_date,
                     url=url,
                     source=self.source,
                     experience_level=experience_level,
                 ))
             except Exception as e:
-                logger.debug(f"Failed to parse Indeed card: {e}")
+                logger.debug(f"Failed to parse Indeed item: {e}")
                 continue
 
         return listings
