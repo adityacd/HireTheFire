@@ -1,9 +1,8 @@
-// Blue pills kept as-is per design; only bg updated for dark theme readability
 const STATUS_STYLES = {
-  new: "bg-gray-800 text-gray-400",
-  interested: "bg-blue-900 text-blue-300",
-  applied: "bg-blue-900 text-blue-300",
-  skip: "bg-red-950 text-red-400",
+  new: "bg-gray-100 text-gray-600",
+  interested: "bg-blue-100 text-blue-700",
+  applied: "bg-green-100 text-green-700",
+  skip: "bg-red-100 text-red-500",
 };
 
 const STATUS_LABELS = {
