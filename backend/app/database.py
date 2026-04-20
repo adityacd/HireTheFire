@@ -32,15 +32,6 @@ async def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
-        await db.execute("""
-            CREATE TABLE IF NOT EXISTS cover_letters (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                job_id INTEGER REFERENCES jobs(id) ON DELETE CASCADE,
-                content TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(job_id)
-            )
-        """)
-        await db.execute("CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status)")
+await db.execute("CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status)")
         await db.execute("CREATE INDEX IF NOT EXISTS idx_jobs_source ON jobs(source)")
         await db.commit()

@@ -11,12 +11,6 @@ export const scrapeJobs = (payload) =>
 export const updateJobStatus = (jobId, status) =>
   api.patch(`/jobs/${jobId}/status`, { status }).then((r) => r.data);
 
-export const generateCoverLetter = (jobId) =>
-  api.post(`/jobs/${jobId}/cover-letter`).then((r) => r.data);
-
-export const getCoverLetter = (jobId) =>
-  api.get(`/jobs/${jobId}/cover-letter`).then((r) => r.data);
-
 export const getResume = () =>
   api.get("/resume").then((r) => r.data.content);
 

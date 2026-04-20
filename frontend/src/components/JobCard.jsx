@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { ExternalLink, FileText, MapPin, Calendar, Building2 } from "lucide-react";
+import { ExternalLink, MapPin, Calendar, Building2 } from "lucide-react";
 import StatusBadge from "./StatusBadge";
-import CoverLetterModal from "./CoverLetterModal";
 import { updateJobStatus } from "../api/client";
 
 const SOURCE_PILL = {
@@ -17,7 +16,6 @@ const STATUS_ACTIONS = [
 ];
 
 export default function JobCard({ job, onStatusChange }) {
-  const [showModal, setShowModal] = useState(false);
   const [hoveredAction, setHoveredAction] = useState(null);
 
   const handleStatus = async (status) => {
@@ -32,96 +30,85 @@ export default function JobCard({ job, onStatusChange }) {
   const src = SOURCE_PILL[job.source];
 
   return (
-    <>
-      <div className="glass glass-hover gradient-border rounded-2xl p-5 shadow-glass h-full flex flex-col">
-        {/* Top row */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              {src && (
-                <span
-                  className="text-xs font-medium px-2.5 py-0.5 rounded-full"
-                  style={{ background: src.bg, color: src.color, border: `1px solid ${src.border}` }}
-                >
-                  {job.source}
-                </span>
-              )}
-              <StatusBadge status={job.status} />
-            </div>
-            <h3 className="mt-2.5 font-semibold text-white text-[15px] leading-snug">
-              {job.title}
-            </h3>
+    <div className="glass glass-hover gradient-border rounded-2xl p-5 shadow-glass h-full flex flex-col">
+      {/* Top row */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            {src && (
+              <span
+                className="text-xs font-medium px-2.5 py-0.5 rounded-full"
+                style={{ background: src.bg, color: src.color, border: `1px solid ${src.border}` }}
+              >
+                {job.source}
+              </span>
+            )}
+            <StatusBadge status={job.status} />
           </div>
-          {job.url && (
-            <a
-              href={job.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Apply"
-              className="shrink-0 p-1.5 rounded-lg text-slate-600 hover:text-white hover:bg-white/8 transition-colors"
-            >
-              <ExternalLink size={16} />
-            </a>
-          )}
+          <h3 className="mt-2.5 font-semibold text-white text-[15px] leading-snug">
+            {job.title}
+          </h3>
         </div>
-
-        {/* Meta */}
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
-          <span className="flex items-center gap-1.5">
-            <Building2 size={12} />
-            {job.company}
-          </span>
-          {job.location && (
-            <span className="flex items-center gap-1.5">
-              <MapPin size={12} />
-              {job.location}
-            </span>
-          )}
-          {job.date_posted && (
-            <span className="flex items-center gap-1.5">
-              <Calendar size={12} />
-              {job.date_posted}
-            </span>
-          )}
-        </div>
-
-        {/* Actions */}
-        <div className="mt-4 pt-4 border-t border-white/5 flex items-center gap-2 flex-wrap">
-          {STATUS_ACTIONS.filter((a) => a.value !== job.status).map((action) => (
-            <button
-              key={action.value}
-              onClick={() => handleStatus(action.value)}
-              onMouseEnter={() => setHoveredAction(action.value)}
-              onMouseLeave={() => setHoveredAction(null)}
-              className="px-3 py-1 rounded-lg text-xs font-medium transition-all duration-150"
-              style={{
-                color: action.color,
-                border: `1px solid ${action.border}`,
-                background: hoveredAction === action.value ? action.hoverBg : "transparent",
-              }}
-            >
-              {action.label}
-            </button>
-          ))}
-          {job.status === "skip" && (
-            <button
-              onClick={() => handleStatus("new")}
-              className="px-3 py-1 rounded-lg text-xs font-medium text-slate-500 border border-white/8 hover:border-white/15 hover:text-slate-300 transition-all"
-            >
-              Restore
-            </button>
-          )}
-          <button
-            onClick={() => setShowModal(true)}
-            className="ml-auto flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium text-indigo-400 border border-indigo-500/25 hover:bg-indigo-500/10 hover:border-indigo-500/40 transition-all"
+        {job.url && (
+          <a
+            href={job.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Apply"
+            className="shrink-0 p-1.5 rounded-lg text-slate-600 hover:text-white hover:bg-white/8 transition-colors"
           >
-            <FileText size={12} />
-            Cover Letter
-          </button>
-        </div>
+            <ExternalLink size={16} />
+          </a>
+        )}
       </div>
 
-      {showModal && <CoverLetterModal job={job} onClose={() => setShowModal(false)} />}
-    </>
+      {/* Meta */}
+      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+        <span className="flex items-center gap-1.5">
+          <Building2 size={12} />
+          {job.company}
+        </span>
+        {job.location && (
+          <span className="flex items-center gap-1.5">
+            <MapPin size={12} />
+            {job.location}
+          </span>
+        )}
+        {job.date_posted && (
+          <span className="flex items-center gap-1.5">
+            <Calendar size={12} />
+            {job.date_posted}
+          </span>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="mt-4 pt-4 border-t border-white/5 flex items-center gap-2 flex-wrap">
+        {STATUS_ACTIONS.filter((a) => a.value !== job.status).map((action) => (
+          <button
+            key={action.value}
+            onClick={() => handleStatus(action.value)}
+            onMouseEnter={() => setHoveredAction(action.value)}
+            onMouseLeave={() => setHoveredAction(null)}
+            className="px-3 py-1 rounded-lg text-xs font-medium transition-all duration-150"
+            style={{
+              color: action.color,
+              border: `1px solid ${action.border}`,
+              background: hoveredAction === action.value ? action.hoverBg : "transparent",
+            }}
+          >
+            {action.label}
+          </button>
+        ))}
+        {job.status === "skip" && (
+          <button
+            onClick={() => handleStatus("new")}
+            className="px-3 py-1 rounded-lg text-xs font-medium text-slate-500 border border-white/8 hover:border-white/15 hover:text-slate-300 transition-all"
+          >
+            Restore
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
