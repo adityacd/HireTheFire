@@ -29,6 +29,7 @@ export default function App() {
     }
   }, []);
 
+  // Debounced filter changes
   useEffect(() => {
     const id = setTimeout(() => fetchJobs(filters), DEBOUNCE_MS);
     return () => clearTimeout(id);
@@ -45,70 +46,64 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-dark">
+    <div className="min-h-screen">
       <Header jobCount={stats.total} />
 
-      <div className="max-w-screen-xl mx-auto px-4 py-6 flex gap-6 items-start">
-        {/* Left — filter panel (sticky) */}
-        <aside className="w-80 shrink-0 sticky top-[61px]">
-          <FilterPanel
-            filters={filters}
-            onChange={setFilters}
-            onScrapeComplete={() => fetchJobs(filters)}
-          />
-        </aside>
+      <main className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        {/* Stats bar */}
+        {jobs.length > 0 && (
+          <div className="flex gap-4 text-sm text-gray-600">
+            <span>
+              <strong className="text-gray-900">{stats.total}</strong> jobs
+            </span>
+            <span>
+              <strong className="text-blue-600">{stats.interested}</strong> interested
+            </span>
+            <span>
+              <strong className="text-green-600">{stats.applied}</strong> applied
+            </span>
+          </div>
+        )}
 
-        {/* Right — results */}
-        <main className="flex-1 min-w-0 space-y-4">
-          {/* Stats bar */}
-          {jobs.length > 0 && (
-            <div className="flex gap-5 text-sm mb-2">
-              <span className="text-gray-400">
-                <strong className="text-white">{stats.total}</strong> jobs
-              </span>
-              <span className="text-gray-400">
-                <strong className="text-blue-400">{stats.interested}</strong> interested
-              </span>
-              <span className="text-gray-400">
-                <strong className="text-neon">{stats.applied}</strong> applied
-              </span>
-            </div>
-          )}
+        <FilterPanel
+          filters={filters}
+          onChange={setFilters}
+          onScrapeComplete={() => fetchJobs(filters)}
+        />
 
-          {error && (
-            <div className="flex items-center gap-2 text-red-400 bg-red-950/40 border border-red-800 rounded-xl px-4 py-3 text-sm">
-              <AlertCircle size={16} />
-              {error}
-            </div>
-          )}
+        {error && (
+          <div className="flex items-center gap-2 text-red-600 bg-red-50 rounded-xl px-4 py-3 text-sm">
+            <AlertCircle size={16} />
+            {error}
+          </div>
+        )}
 
-          {loading && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-dark-card rounded-xl border border-dark-border p-5 animate-pulse h-36"
-                />
-              ))}
-            </div>
-          )}
+        {loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-xl border border-gray-200 p-5 animate-pulse h-36"
+              />
+            ))}
+          </div>
+        )}
 
-          {!loading && !error && jobs.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-32 gap-4">
-              <Inbox size={44} className="text-neon opacity-40" />
-              <p className="text-gray-500 text-base">No jobs yet. Search to find listings.</p>
-            </div>
-          )}
+        {!loading && !error && jobs.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20 text-gray-400 gap-3">
+            <Inbox size={40} />
+            <p className="text-base">No jobs yet. Search above to find listings.</p>
+          </div>
+        )}
 
-          {!loading && jobs.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {jobs.map((job) => (
-                <JobCard key={job.id} job={job} onStatusChange={handleStatusChange} />
-              ))}
-            </div>
-          )}
-        </main>
-      </div>
+        {!loading && jobs.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {jobs.map((job) => (
+              <JobCard key={job.id} job={job} onStatusChange={handleStatusChange} />
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   );
 }
