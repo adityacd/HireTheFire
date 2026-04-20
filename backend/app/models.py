@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime import datetime
 
 
 class JobOut(BaseModel):
@@ -28,12 +27,6 @@ class ScrapeRequest(BaseModel):
     title: str
     location: str
     experience_level: Optional[str] = None  # entry | mid | senior
-
-
-class CoverLetterOut(BaseModel):
-    job_id: int
-    content: str
-    created_at: str
 
 
 class ResumeUpdate(BaseModel):
