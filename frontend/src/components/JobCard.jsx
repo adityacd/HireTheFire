@@ -30,7 +30,7 @@ export default function JobCard({ job, onStatusChange }) {
 
   return (
     <>
-      <div className="card-hover bg-dark-card rounded-xl border border-neon/30 p-5 transition-all duration-300 shadow-neon-sm">
+      <div className="card-hover bg-dark-card rounded-xl border border-neon p-5 transition-all duration-300 shadow-neon-sm">
         {/* Top row */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">

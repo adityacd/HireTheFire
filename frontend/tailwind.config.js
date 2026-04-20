@@ -6,9 +6,9 @@ export default {
       colors: {
         neon: "#39FF14",
         "neon-dim": "#28b30e",
-        dark: "#0a0a0a",
-        "dark-card": "#111111",
-        "dark-border": "#1a1a1a",
+        dark: "#141a14",
+        "dark-card": "#1a221a",
+        "dark-border": "#243024",
       },
       boxShadow: {
         neon: "0 0 6px #39FF14, 0 0 20px #39FF1440",
