@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, SlidersHorizontal } from "lucide-react";
 import { scrapeJobs } from "../api/client";
 
 const STATUSES = [
-  { value: "", label: "All" },
+  { value: "", label: "All Statuses" },
   { value: "new", label: "New" },
   { value: "interested", label: "Interested" },
   { value: "applied", label: "Applied" },
@@ -24,6 +24,9 @@ const EXPERIENCE_LEVELS = [
   { value: "senior", label: "Senior Level" },
 ];
 
+const inputCls =
+  "w-full rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition-all duration-200 focus:ring-1 focus:ring-indigo-500/60 bg-white/5 border border-white/8 hover:border-white/12";
+
 export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
   const [scraping, setScraping] = useState(false);
   const [scrapeMsg, setScrapeMsg] = useState(null);
@@ -33,7 +36,7 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
 
   const handleScrape = async () => {
     if (!scrapeTitle.trim() || !scrapeLocation.trim()) {
-      setScrapeMsg({ type: "error", text: "Please enter a job title and location." });
+      setScrapeMsg({ type: "error", text: "Enter a job title and location." });
       return;
     }
     setScraping(true);
@@ -46,10 +49,10 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
       });
       setScrapeMsg({
         type: "success",
-        text: `Found ${result.added} new jobs (${result.duplicates} duplicates skipped).${result.errors.length ? " Some sources failed." : ""}`,
+        text: `${result.added} new jobs found.${result.duplicates ? ` ${result.duplicates} duplicates skipped.` : ""}`,
       });
       onScrapeComplete();
-    } catch (e) {
+    } catch {
       setScrapeMsg({ type: "error", text: "Scrape failed. Is the backend running?" });
     } finally {
       setScraping(false);
@@ -57,104 +60,100 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-5">
-      {/* Scrape section */}
+    <div className="glass gradient-border rounded-2xl p-5 space-y-6 shadow-glass">
+      {/* Search */}
       <div>
-        <h2 className="font-semibold text-sm text-gray-700 mb-3">Search New Jobs</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">
+          Search Jobs
+        </p>
+        <div className="space-y-2.5">
           <input
             type="text"
-            placeholder="Job title (e.g. Software Engineer)"
+            placeholder="Job title"
             value={scrapeTitle}
             onChange={(e) => setScrapeTitle(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onKeyDown={(e) => e.key === "Enter" && handleScrape()}
+            className={inputCls}
           />
           <input
             type="text"
-            placeholder="Location (e.g. San Francisco, CA)"
+            placeholder="Location"
             value={scrapeLocation}
             onChange={(e) => setScrapeLocation(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onKeyDown={(e) => e.key === "Enter" && handleScrape()}
+            className={inputCls}
           />
-        </div>
-        <div className="mt-3 flex items-center gap-3 flex-wrap">
           <select
             value={scrapeExp}
             onChange={(e) => setScrapeExp(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className={inputCls}
           >
             {EXPERIENCE_LEVELS.map((l) => (
-              <option key={l.value} value={l.value}>
-                {l.label}
-              </option>
+              <option key={l.value} value={l.value}>{l.label}</option>
             ))}
           </select>
-          <button
-            onClick={handleScrape}
-            disabled={scraping}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-60 transition"
-          >
-            {scraping ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Search size={16} />
-            )}
-            {scraping ? "Searching…" : "Search Jobs"}
-          </button>
         </div>
+
+        <button
+          onClick={handleScrape}
+          disabled={scraping}
+          className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-all duration-200 hover:shadow-btn-glow hover:brightness-110"
+          style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
+        >
+          {scraping ? <Loader2 size={15} className="animate-spin" /> : <Search size={15} />}
+          {scraping ? "Searching…" : "Search Jobs"}
+        </button>
+
         {scrapeMsg && (
-          <p
-            className={`mt-2 text-sm rounded-lg px-3 py-2 ${
-              scrapeMsg.type === "error"
-                ? "bg-red-50 text-red-600"
-                : "bg-green-50 text-green-700"
-            }`}
-          >
+          <p className={`mt-2.5 text-xs rounded-xl px-3 py-2 ${
+            scrapeMsg.type === "error"
+              ? "text-red-400 bg-red-500/10 border border-red-500/20"
+              : "text-indigo-300 bg-indigo-500/10 border border-indigo-500/20"
+          }`}>
             {scrapeMsg.text}
           </p>
         )}
       </div>
 
-      <hr className="border-gray-100" />
+      <div className="h-px bg-white/5" />
 
-      {/* Filter section */}
+      {/* Filters */}
       <div>
-        <h2 className="font-semibold text-sm text-gray-700 mb-3">Filter Results</h2>
-        <div className="flex flex-wrap gap-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3 flex items-center gap-1.5">
+          <SlidersHorizontal size={12} />
+          Filter
+        </p>
+        <div className="space-y-2.5">
           <input
             type="text"
-            placeholder="Filter by title…"
+            placeholder="Title…"
             value={filters.title || ""}
             onChange={(e) => onChange({ ...filters, title: e.target.value })}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
+            className={inputCls}
           />
           <input
             type="text"
-            placeholder="Filter by location…"
+            placeholder="Location…"
             value={filters.location || ""}
             onChange={(e) => onChange({ ...filters, location: e.target.value })}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
+            className={inputCls}
           />
           <select
             value={filters.status || ""}
             onChange={(e) => onChange({ ...filters, status: e.target.value })}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className={inputCls}
           >
             {STATUSES.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
+              <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
           <select
             value={filters.source || ""}
             onChange={(e) => onChange({ ...filters, source: e.target.value })}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className={inputCls}
           >
             {SOURCES.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
+              <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
         </div>

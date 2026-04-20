@@ -9,7 +9,6 @@ export default function CoverLetterModal({ job, onClose }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Try to load an existing cover letter
     getCoverLetter(job.id)
       .then((cl) => setContent(cl.content))
       .catch(() => {});
@@ -35,62 +34,60 @@ export default function CoverLetterModal({ job, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh]">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(10px)" }}
+    >
+      <div className="glass gradient-border rounded-2xl w-full max-w-2xl flex flex-col max-h-[88vh] shadow-glass">
         {/* Header */}
-        <div className="flex items-start justify-between p-5 border-b">
+        <div className="flex items-start justify-between px-6 py-4 border-b border-white/5">
           <div>
-            <h2 className="font-semibold text-lg">Cover Letter</h2>
-            <p className="text-sm text-gray-500">
-              {job.title} — {job.company}
-            </p>
+            <h2 className="font-semibold text-white">Cover Letter</h2>
+            <p className="text-xs text-slate-500 mt-0.5">{job.title} — {job.company}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-gray-100 transition"
+            className="p-1.5 rounded-lg hover:bg-white/5 text-slate-500 hover:text-white transition"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-5">
+        <div className="flex-1 overflow-y-auto px-6 py-5">
           {content ? (
-            <pre className="whitespace-pre-wrap text-sm font-sans text-gray-800 leading-relaxed">
+            <pre className="whitespace-pre-wrap text-sm font-sans text-slate-300 leading-relaxed">
               {content}
             </pre>
           ) : (
-            <div className="flex flex-col items-center justify-center h-40 text-gray-400 gap-2">
-              <p>No cover letter generated yet.</p>
+            <div className="flex flex-col items-center justify-center h-40 text-slate-600 gap-2 text-sm">
+              <p>No cover letter yet — click Generate to create one.</p>
             </div>
           )}
           {error && (
-            <p className="mt-3 text-sm text-red-600 bg-red-50 rounded-lg p-3">
+            <p className="mt-3 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
               {error}
             </p>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-4 border-t gap-3">
+        <div className="flex items-center gap-3 px-6 py-4 border-t border-white/5">
           <button
             onClick={handleGenerate}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-60 transition"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-all hover:shadow-btn-glow hover:brightness-110"
+            style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
           >
-            {loading ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <RefreshCw size={16} />
-            )}
+            {loading ? <Loader2 size={15} className="animate-spin" /> : <RefreshCw size={15} />}
             {content ? "Regenerate" : "Generate"}
           </button>
           {content && (
             <button
               onClick={handleCopy}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-400 border border-white/8 hover:border-white/15 hover:text-white transition-all"
             >
-              {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
+              {copied ? <Check size={15} className="text-indigo-400" /> : <Copy size={15} />}
               {copied ? "Copied!" : "Copy"}
             </button>
           )}
