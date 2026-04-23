@@ -147,14 +147,11 @@ async def score_job(job_id: int, db: aiosqlite.Connection = Depends(get_db)):
         raise HTTPException(404, "Job not found")
 
     job = dict(row)
-    if not job.get("description"):
-        raise HTTPException(400, "Job has no description to score against")
-
     try:
         result = await score_compatibility(
             job_title=job["title"],
             company=job["company"],
-            job_description=job["description"],
+            job_description=job.get("description") or "",
         )
     except Exception as e:
         raise HTTPException(500, f"Scoring failed: {e}")
