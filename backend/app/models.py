@@ -14,9 +14,16 @@ class JobOut(BaseModel):
     experience_level: Optional[str]
     description: Optional[str]
     created_at: str
+    compatibility_score: Optional[float] = None
+    compatibility_reasoning: Optional[str] = None
 
     class Config:
         from_attributes = True
+
+
+class CompatibilityScoreOut(BaseModel):
+    compatibility_score: float
+    compatibility_reasoning: str
 
 
 class JobStatusUpdate(BaseModel):

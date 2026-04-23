@@ -29,9 +29,20 @@ async def init_db():
                 status TEXT DEFAULT 'new',
                 experience_level TEXT,
                 description TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                compatibility_score REAL,
+                compatibility_reasoning TEXT
             )
         """)
-await db.execute("CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status)")
+        await db.execute("CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status)")
         await db.execute("CREATE INDEX IF NOT EXISTS idx_jobs_source ON jobs(source)")
+        # Add columns to existing DBs if missing
+        for col, typedef in [
+            ("compatibility_score", "REAL"),
+            ("compatibility_reasoning", "TEXT"),
+        ]:
+            try:
+                await db.execute(f"ALTER TABLE jobs ADD COLUMN {col} {typedef}")
+            except Exception:
+                pass
         await db.commit()
