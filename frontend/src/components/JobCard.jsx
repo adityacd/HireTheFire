@@ -21,12 +21,13 @@ function scoreColor(score) {
   return { text: "#f87171", bg: "rgba(248,113,113,0.15)", border: "rgba(248,113,113,0.3)" };
 }
 
-export default function JobCard({ job, onStatusChange }) {
+export default function JobCard({ job, onStatusChange, onScoreChange }) {
   const [hoveredAction, setHoveredAction] = useState(null);
   const [scoring, setScoring] = useState(false);
-  const [score, setScore] = useState(job.compatibility_score ?? null);
-  const [reasoning, setReasoning] = useState(job.compatibility_reasoning ?? null);
   const [showReasoning, setShowReasoning] = useState(false);
+
+  const score = job.compatibility_score ?? null;
+  const reasoning = job.compatibility_reasoning ?? null;
 
   const handleStatus = async (status) => {
     try {
@@ -41,8 +42,7 @@ export default function JobCard({ job, onStatusChange }) {
     setScoring(true);
     try {
       const result = await scoreJob(job.id);
-      setScore(result.compatibility_score);
-      setReasoning(result.compatibility_reasoning);
+      onScoreChange?.(job.id, result.compatibility_score, result.compatibility_reasoning);
     } catch (e) {
       console.error("Failed to score job", e);
     } finally {

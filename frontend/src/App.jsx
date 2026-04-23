@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import Header from "./components/Header";
 import FilterPanel from "./components/FilterPanel";
 import JobCard from "./components/JobCard";
-import { getJobs } from "./api/client";
-import { Inbox, AlertCircle, Briefcase, Star, CheckCircle2, XCircle } from "lucide-react";
+import { getJobs, scoreJob } from "./api/client";
+import { Inbox, AlertCircle, Briefcase, Star, CheckCircle2, XCircle, Zap, Loader2 } from "lucide-react";
 
 const DEBOUNCE_MS = 400;
 
@@ -51,6 +51,7 @@ export default function App() {
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [scoringAll, setScoringAll] = useState(false);
 
   const fetchJobs = useCallback(async (f = {}) => {
     setLoading(true);
@@ -75,6 +76,31 @@ export default function App() {
 
   const handleStatusChange = (updated) => {
     setJobs((prev) => prev.map((j) => (j.id === updated.id ? updated : j)));
+  };
+
+  const handleScoreChange = (jobId, score, reasoning) => {
+    setJobs((prev) =>
+      prev.map((j) =>
+        j.id === jobId
+          ? { ...j, compatibility_score: score, compatibility_reasoning: reasoning }
+          : j
+      )
+    );
+  };
+
+  const handleScoreAll = async () => {
+    const unscored = jobs.filter((j) => j.compatibility_score == null);
+    if (!unscored.length) return;
+    setScoringAll(true);
+    for (const job of unscored) {
+      try {
+        const result = await scoreJob(job.id);
+        handleScoreChange(job.id, result.compatibility_score, result.compatibility_reasoning);
+      } catch (e) {
+        console.error(`Failed to score job ${job.id}`, e);
+      }
+    }
+    setScoringAll(false);
   };
 
   const stats = {
@@ -157,17 +183,35 @@ export default function App() {
           )}
 
           {!loading && jobs.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {jobs.map((job, i) => (
-                <div
-                  key={job.id}
-                  className="card-in"
-                  style={{ animationDelay: `${Math.min(i * 40, 300)}ms` }}
+            <>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs text-slate-500">{jobs.length} job{jobs.length !== 1 ? "s" : ""}</p>
+                <button
+                  onClick={handleScoreAll}
+                  disabled={scoringAll || jobs.every((j) => j.compatibility_score != null)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 disabled:opacity-40"
+                  style={{
+                    color: "#fb923c",
+                    border: "1px solid rgba(251,146,60,0.3)",
+                    background: scoringAll ? "rgba(251,146,60,0.1)" : "transparent",
+                  }}
                 >
-                  <JobCard job={job} onStatusChange={handleStatusChange} />
-                </div>
-              ))}
-            </div>
+                  {scoringAll ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
+                  {scoringAll ? "Scoring all…" : "Score All"}
+                </button>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {jobs.map((job, i) => (
+                  <div
+                    key={job.id}
+                    className="card-in"
+                    style={{ animationDelay: `${Math.min(i * 40, 300)}ms` }}
+                  >
+                    <JobCard job={job} onStatusChange={handleStatusChange} onScoreChange={handleScoreChange} />
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </main>
       </div>
