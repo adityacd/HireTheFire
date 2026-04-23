@@ -21,6 +21,8 @@ async def score_compatibility(job_title: str, company: str, job_description: str
 
     client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
+    description_section = f"JOB DESCRIPTION:\n{job_description}" if job_description else "JOB DESCRIPTION: Not available — base your analysis on the job title and company alone."
+
     prompt = f"""You are an expert recruiter and career coach. Analyze how well the candidate's resume matches the job posting.
 
 RESUME:
@@ -28,8 +30,7 @@ RESUME:
 
 JOB TITLE: {job_title}
 COMPANY: {company}
-JOB DESCRIPTION:
-{job_description}
+{description_section}
 
 Return ONLY a JSON object with exactly these two fields:
 {{

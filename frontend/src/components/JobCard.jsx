@@ -149,8 +149,7 @@ export default function JobCard({ job, onStatusChange }) {
             Restore
           </button>
         )}
-        {job.description && (
-          <button
+        <button
             onClick={handleScore}
             disabled={scoring}
             className="ml-auto px-3 py-1 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all duration-150 disabled:opacity-50"
@@ -164,7 +163,6 @@ export default function JobCard({ job, onStatusChange }) {
             <Zap size={11} />
             {scoring ? "Scoring…" : score !== null ? "Re-score" : "Score"}
           </button>
-        )}
       </div>
     </div>
   );
