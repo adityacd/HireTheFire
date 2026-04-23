@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 import aiosqlite
 
 from ..database import get_db
-from ..models import JobOut, JobStatusUpdate, ScrapeRequest, ScrapeResult
+from ..models import JobOut, JobStatusUpdate, ScrapeRequest, ScrapeResult, CompatibilityScoreOut
+from ..services.cover_letter_service import score_compatibility
 from ..scrapers.indeed import IndeedScraper
 from ..scrapers.linkedin import LinkedInScraper
 from ..scrapers.glassdoor import GlassdoorScraper
@@ -136,3 +137,35 @@ async def get_job(job_id: int, db: aiosqlite.Connection = Depends(get_db)):
     if not row:
         raise HTTPException(404, "Job not found")
     return dict(row)
+
+
+@router.post("/{job_id}/score", response_model=CompatibilityScoreOut)
+async def score_job(job_id: int, db: aiosqlite.Connection = Depends(get_db)):
+    async with db.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)) as cursor:
+        row = await cursor.fetchone()
+    if not row:
+        raise HTTPException(404, "Job not found")
+
+    job = dict(row)
+    if not job.get("description"):
+        raise HTTPException(400, "Job has no description to score against")
+
+    try:
+        result = await score_compatibility(
+            job_title=job["title"],
+            company=job["company"],
+            job_description=job["description"],
+        )
+    except Exception as e:
+        raise HTTPException(500, f"Scoring failed: {e}")
+
+    await db.execute(
+        "UPDATE jobs SET compatibility_score = ?, compatibility_reasoning = ? WHERE id = ?",
+        (result["score"], result["reasoning"], job_id),
+    )
+    await db.commit()
+
+    return CompatibilityScoreOut(
+        compatibility_score=result["score"],
+        compatibility_reasoning=result["reasoning"],
+    )

@@ -16,3 +16,6 @@ export const getResume = () =>
 
 export const updateResume = (content) =>
   api.put("/resume", { content }).then((r) => r.data);
+
+export const scoreJob = (jobId) =>
+  api.post(`/jobs/${jobId}/score`).then((r) => r.data);
