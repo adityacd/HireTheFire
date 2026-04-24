@@ -1,12 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Flame, FileText, X, Save, Loader2 } from "lucide-react";
 import { getResume, updateResume } from "../api/client";
+
+const FONT_SIZES = [
+  { label: "A−", value: 14, title: "Small" },
+  { label: "A",  value: 16, title: "Medium" },
+  { label: "A+", value: 18, title: "Large"  },
+];
+
+function useFontSize() {
+  const [size, setSize] = useState(() => {
+    const saved = localStorage.getItem("htf-font-size");
+    return saved ? parseInt(saved, 10) : 16;
+  });
+
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${size}px`;
+    localStorage.setItem("htf-font-size", size);
+  }, [size]);
+
+  return [size, setSize];
+}
 
 export default function Header({ jobCount }) {
   const [showResume, setShowResume] = useState(false);
   const [resumeText, setResumeText] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
+  const [fontSize, setFontSize] = useFontSize();
 
   const openResume = async () => {
     const content = await getResume();
@@ -55,13 +76,37 @@ export default function Header({ jobCount }) {
             )}
           </div>
 
-          <button
-            onClick={openResume}
-            className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
-          >
-            <FileText size={15} />
-            My Resume
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Font size control */}
+            <div
+              className="flex items-center rounded-lg overflow-hidden"
+              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              {FONT_SIZES.map((opt, i) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setFontSize(opt.value)}
+                  title={opt.title}
+                  className="px-2.5 py-1.5 text-xs font-semibold transition-all duration-150"
+                  style={{
+                    background: fontSize === opt.value ? "rgba(190,24,93,0.2)" : "transparent",
+                    color: fontSize === opt.value ? "#f472b6" : "#64748b",
+                    borderRight: i < FONT_SIZES.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={openResume}
+              className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
+            >
+              <FileText size={15} />
+              My Resume
+            </button>
+          </div>
         </div>
       </header>
 
