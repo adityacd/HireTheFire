@@ -184,20 +184,30 @@ export default function App() {
 
           {!loading && jobs.length > 0 && (
             <>
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-xs text-slate-500">{jobs.length} job{jobs.length !== 1 ? "s" : ""}</p>
+              <div className="flex items-center justify-between mb-4 px-1">
+                <div className="flex items-center gap-3">
+                  <p className="text-sm font-semibold text-slate-300">{jobs.length} job{jobs.length !== 1 ? "s" : ""}</p>
+                  {(() => {
+                    const scored = jobs.filter(j => j.compatibility_score != null).length;
+                    return scored > 0 ? (
+                      <span className="text-xs text-slate-600">{scored} scored</span>
+                    ) : null;
+                  })()}
+                </div>
                 <button
                   onClick={handleScoreAll}
                   disabled={scoringAll || jobs.every((j) => j.compatibility_score != null)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 disabled:opacity-40"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 disabled:opacity-40 hover:brightness-110"
                   style={{
                     color: "#fb923c",
                     border: "1px solid rgba(251,146,60,0.3)",
-                    background: scoringAll ? "rgba(251,146,60,0.1)" : "transparent",
+                    background: scoringAll ? "rgba(251,146,60,0.12)" : "rgba(251,146,60,0.06)",
                   }}
                 >
                   {scoringAll ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
-                  {scoringAll ? "Scoring all…" : "Score All"}
+                  {scoringAll
+                    ? `Scoring… ${jobs.filter(j => j.compatibility_score != null).length}/${jobs.length}`
+                    : "Score All"}
                 </button>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
