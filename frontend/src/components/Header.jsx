@@ -31,7 +31,7 @@ export default function Header({ jobCount }) {
     <>
       <header
         className="sticky top-0 z-40 border-b border-white/5"
-        style={{ background: "rgba(7,9,15,0.85)", backdropFilter: "blur(20px)" }}
+        style={{ background: "rgba(14,23,42,0.88)", backdropFilter: "blur(20px)" }}
       >
         <div className="max-w-screen-xl mx-auto px-6 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -45,9 +45,9 @@ export default function Header({ jobCount }) {
               <span
                 className="ml-1 text-xs font-semibold px-2.5 py-0.5 rounded-full"
                 style={{
-                  background: "rgba(99,102,241,0.2)",
-                  color: "#818cf8",
-                  border: "1px solid rgba(99,102,241,0.3)",
+                  background: "rgba(190,24,93,0.15)",
+                  color: "#f472b6",
+                  border: "1px solid rgba(190,24,93,0.3)",
                 }}
               >
                 {jobCount} jobs
@@ -98,7 +98,7 @@ export default function Header({ jobCount }) {
                 onClick={handleSave}
                 disabled={saving}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-all hover:shadow-btn-glow"
-                style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
+                style={{ background: "linear-gradient(135deg, #BE185D, #9d174d)" }}
               >
                 {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                 {saveMsg || "Save"}
