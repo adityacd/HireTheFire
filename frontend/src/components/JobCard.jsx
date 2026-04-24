@@ -12,8 +12,8 @@ const SOURCE_PILL = {
 const EXP_LABELS = { entry: "Entry", mid: "Mid", senior: "Senior" };
 
 const STATUS_ACTIONS = [
-  { value: "interested", label: "Interested", color: "#93c5fd", border: "rgba(59,130,246,0.3)",  hoverBg: "rgba(59,130,246,0.1)"  },
-  { value: "applied",    label: "Applied",    color: "#a5b4fc", border: "rgba(99,102,241,0.35)", hoverBg: "rgba(99,102,241,0.1)" },
+  { value: "interested", label: "Interested", color: "#f9a8d4", border: "rgba(190,24,93,0.3)",   hoverBg: "rgba(190,24,93,0.1)"  },
+  { value: "applied",    label: "Applied",    color: "#c4b5fd", border: "rgba(139,92,246,0.3)",  hoverBg: "rgba(139,92,246,0.1)" },
   { value: "skip",       label: "Skip",       color: "#fca5a5", border: "rgba(239,68,68,0.25)",  hoverBg: "rgba(239,68,68,0.08)" },
 ];
 
@@ -132,7 +132,7 @@ export default function JobCard({ job, onStatusChange, onScoreChange }) {
             onClick={handleScore}
             disabled={scoring}
             className="w-full py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all duration-150 disabled:opacity-50"
-            style={{ color: "#fb923c", border: "1px solid rgba(251,146,60,0.25)", background: scoring ? "rgba(251,146,60,0.08)" : "rgba(251,146,60,0.04)" }}
+            style={{ color: "#f472b6", border: "1px solid rgba(190,24,93,0.3)", background: scoring ? "rgba(190,24,93,0.1)" : "rgba(190,24,93,0.05)" }}
           >
             {scoring ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
             {scoring ? "Scoring…" : "Score with Resume"}

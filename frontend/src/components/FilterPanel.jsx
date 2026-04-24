@@ -98,7 +98,7 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
           onClick={handleScrape}
           disabled={scraping}
           className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-all duration-200 hover:shadow-btn-glow hover:brightness-110"
-          style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
+          style={{ background: "linear-gradient(135deg, #BE185D, #9d174d)" }}
         >
           {scraping ? <Loader2 size={15} className="animate-spin" /> : <Search size={15} />}
           {scraping ? "Searching…" : "Search Jobs"}
@@ -108,7 +108,7 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
           <p className={`mt-2.5 text-xs rounded-xl px-3 py-2 ${
             scrapeMsg.type === "error"
               ? "text-red-400 bg-red-500/10 border border-red-500/20"
-              : "text-indigo-300 bg-indigo-500/10 border border-indigo-500/20"
+              : "text-pink-300 bg-pink-500/10 border border-pink-500/20"
           }`}>
             {scrapeMsg.text}
           </p>

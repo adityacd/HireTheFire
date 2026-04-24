@@ -12,28 +12,28 @@ const METRIC_CARDS = [
     key: "total",
     label: "Total Jobs",
     icon: Briefcase,
-    color: "#818cf8",
-    bg: "rgba(99,102,241,0.12)",
-    border: "rgba(99,102,241,0.25)",
-    glow: "rgba(99,102,241,0.15)",
+    color: "#f472b6",
+    bg: "rgba(190,24,93,0.12)",
+    border: "rgba(190,24,93,0.25)",
+    glow: "rgba(190,24,93,0.12)",
   },
   {
     key: "interested",
     label: "Interested",
     icon: Star,
-    color: "#93c5fd",
-    bg: "rgba(59,130,246,0.12)",
-    border: "rgba(59,130,246,0.25)",
-    glow: "rgba(59,130,246,0.12)",
+    color: "#f9a8d4",
+    bg: "rgba(190,24,93,0.08)",
+    border: "rgba(190,24,93,0.2)",
+    glow: "rgba(190,24,93,0.08)",
   },
   {
     key: "applied",
     label: "Applied",
     icon: CheckCircle2,
-    color: "#a5b4fc",
-    bg: "rgba(139,92,246,0.12)",
-    border: "rgba(139,92,246,0.25)",
-    glow: "rgba(139,92,246,0.12)",
+    color: "#c4b5fd",
+    bg: "rgba(139,92,246,0.1)",
+    border: "rgba(139,92,246,0.22)",
+    glow: "rgba(139,92,246,0.08)",
   },
   {
     key: "skipped",
@@ -41,8 +41,8 @@ const METRIC_CARDS = [
     icon: XCircle,
     color: "#fca5a5",
     bg: "rgba(239,68,68,0.08)",
-    border: "rgba(239,68,68,0.2)",
-    glow: "rgba(239,68,68,0.08)",
+    border: "rgba(239,68,68,0.18)",
+    glow: "rgba(239,68,68,0.06)",
   },
 ];
 
@@ -199,9 +199,9 @@ export default function App() {
                   disabled={scoringAll || jobs.every((j) => j.compatibility_score != null)}
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 disabled:opacity-40 hover:brightness-110"
                   style={{
-                    color: "#fb923c",
-                    border: "1px solid rgba(251,146,60,0.3)",
-                    background: scoringAll ? "rgba(251,146,60,0.12)" : "rgba(251,146,60,0.06)",
+                    color: "#f472b6",
+                    border: "1px solid rgba(190,24,93,0.35)",
+                    background: scoringAll ? "rgba(190,24,93,0.12)" : "rgba(190,24,93,0.06)",
                   }}
                 >
                   {scoringAll ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
