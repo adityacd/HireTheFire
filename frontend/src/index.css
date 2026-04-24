@@ -97,6 +97,12 @@ body {
   animation: shimmer 1.6s infinite;
 }
 
+/* ── Score bar fill animation ────────────────────────────────────── */
+@keyframes score-fill {
+  from { width: 0%; }
+}
+.score-bar { animation: score-fill 0.7s cubic-bezier(0.34,1.2,0.64,1) both; }
+
 /* ── Scrollbar ────────────────────────────────────────────────────── */
 ::-webkit-scrollbar             { width: 5px; }
 ::-webkit-scrollbar-track       { background: transparent; }
