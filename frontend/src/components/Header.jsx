@@ -51,37 +51,33 @@ export default function Header({ jobCount }) {
   return (
     <>
       <header
-        className="sticky top-0 z-40 border-b border-white/5"
-        style={{ background: "rgba(14,23,42,0.88)", backdropFilter: "blur(20px)" }}
+        className="sticky top-0 z-40"
+        style={{
+          background: "rgba(8,12,16,0.9)",
+          backdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(0,255,170,0.08)",
+        }}
       >
         <div className="max-w-screen-xl mx-auto px-6 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <span className="flame-icon">
-              <Flame size={26} />
-            </span>
-            <span className="flame-text font-black text-xl tracking-tight select-none">
+          <div className="flex items-center gap-3">
+            <span className="flame-icon"><Flame size={24} /></span>
+            <span className="flame-text font-display font-black text-lg tracking-widest select-none uppercase">
               HireTheFire
             </span>
             {jobCount > 0 && (
               <span
-                className="ml-1 text-xs font-semibold px-2.5 py-0.5 rounded-full"
-                style={{
-                  background: "rgba(190,24,93,0.15)",
-                  color: "#f472b6",
-                  border: "1px solid rgba(190,24,93,0.3)",
-                }}
+                className="text-xs font-medium px-2.5 py-0.5 rounded-full"
+                style={{ background: "rgba(0,255,170,0.08)", color: "#00ffaa", border: "1px solid rgba(0,255,170,0.2)" }}
               >
-                {jobCount} jobs
+                {jobCount}
               </span>
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {/* Font size control */}
-            <div
-              className="flex items-center rounded-lg overflow-hidden"
-              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
-            >
+            <div className="flex items-center rounded-lg overflow-hidden"
+              style={{ border: "1px solid rgba(0,255,170,0.12)" }}>
               {FONT_SIZES.map((opt, i) => (
                 <button
                   key={opt.value}
@@ -89,9 +85,9 @@ export default function Header({ jobCount }) {
                   title={opt.title}
                   className="px-2.5 py-1.5 text-xs font-semibold transition-all duration-150"
                   style={{
-                    background: fontSize === opt.value ? "rgba(190,24,93,0.2)" : "transparent",
-                    color: fontSize === opt.value ? "#f472b6" : "#64748b",
-                    borderRight: i < FONT_SIZES.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                    background: fontSize === opt.value ? "rgba(0,255,170,0.15)" : "transparent",
+                    color: fontSize === opt.value ? "#00ffaa" : "#334155",
+                    borderRight: i < FONT_SIZES.length - 1 ? "1px solid rgba(0,255,170,0.08)" : "none",
                   }}
                 >
                   {opt.label}
@@ -101,7 +97,10 @@ export default function Header({ jobCount }) {
 
             <button
               onClick={openResume}
-              className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
+              className="flex items-center gap-1.5 text-sm transition-colors px-3 py-1.5 rounded-lg"
+              style={{ color: "#475569" }}
+              onMouseEnter={e => e.currentTarget.style.color = "#00ffaa"}
+              onMouseLeave={e => e.currentTarget.style.color = "#475569"}
             >
               <FileText size={15} />
               My Resume
@@ -113,14 +112,18 @@ export default function Header({ jobCount }) {
       {showResume && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)" }}
+          style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(10px)" }}
         >
           <div className="glass gradient-border rounded-2xl w-full max-w-2xl flex flex-col max-h-[88vh] shadow-glass">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-              <h2 className="font-semibold text-white">My Resume</h2>
+            <div className="flex items-center justify-between px-6 py-4"
+              style={{ borderBottom: "1px solid rgba(0,255,170,0.08)" }}>
+              <h2 className="font-display font-semibold text-white tracking-wide">My Resume</h2>
               <button
                 onClick={() => setShowResume(false)}
-                className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition"
+                className="p-1.5 rounded-lg transition-colors"
+                style={{ color: "#475569" }}
+                onMouseEnter={e => e.currentTarget.style.color = "#00ffaa"}
+                onMouseLeave={e => e.currentTarget.style.color = "#475569"}
               >
                 <X size={18} />
               </button>
@@ -128,22 +131,24 @@ export default function Header({ jobCount }) {
             <textarea
               value={resumeText}
               onChange={(e) => setResumeText(e.target.value)}
-              className="flex-1 px-6 py-4 font-mono text-sm resize-none focus:outline-none overflow-y-auto bg-transparent text-slate-300 placeholder-slate-600"
+              className="flex-1 px-6 py-4 font-mono text-sm resize-none focus:outline-none overflow-y-auto bg-transparent placeholder-slate-700"
+              style={{ color: "#94a3b8" }}
               placeholder="Paste your resume here…"
               rows={20}
             />
-            <div className="flex items-center justify-between px-6 py-3 border-t border-white/5">
-              <p className="text-xs text-slate-600">
+            <div className="flex items-center justify-between px-6 py-3"
+              style={{ borderTop: "1px solid rgba(0,255,170,0.08)" }}>
+              <p className="text-xs" style={{ color: "#334155" }}>
                 Stored in{" "}
-                <code className="text-slate-500 bg-white/5 px-1.5 py-0.5 rounded">
+                <code className="px-1.5 py-0.5 rounded" style={{ color: "#475569", background: "rgba(0,255,170,0.05)" }}>
                   backend/resume.txt
                 </code>
               </p>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-all hover:shadow-btn-glow"
-                style={{ background: "linear-gradient(135deg, #BE185D, #9d174d)" }}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold disabled:opacity-50 transition-all"
+                style={{ background: "linear-gradient(135deg, #00ffaa, #007a52)", color: "#080c10" }}
               >
                 {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                 {saveMsg || "Save"}
