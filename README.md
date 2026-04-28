@@ -1,107 +1,63 @@
-# HireTheFire — Job Search Assistant
+# HireTheFire
 
-A personal job search dashboard that scrapes LinkedIn, Indeed, and Glassdoor, tracks your applications, and generates AI-powered cover letters using Claude.
+A personal job search dashboard. Scrapes LinkedIn, Indeed, and Glassdoor, tracks your applications, and scores each job against your resume using Claude AI.
 
 ---
 
 ## Features
 
-- **Job scraping** — pulls listings from LinkedIn, Indeed, and Glassdoor posted in the last 3 days
-- **Deduplication** — removes duplicate listings across platforms
-- **Filtering** — filter by title, location, source, experience level, and status
-- **Status tracking** — mark jobs as Interested, Applied, or Skip
-- **AI cover letters** — generate a personalized cover letter for any job using Claude
-- **Resume editor** — update your resume in the UI; it's stored as plain text
+- Scrapes job listings from LinkedIn, Indeed, and Glassdoor (last 3 days)
+- Filters by title, location, source, experience level, and status
+- Track jobs as **Interested**, **Applied**, or **Skip**
+- **Resume compatibility score** — Claude reads your resume and the job, returns a 0–100% match with reasoning
+- Resume editor built into the UI
 
 ---
 
-## Tech Stack
-
-| Layer    | Technology                    |
-|----------|-------------------------------|
-| Backend  | Python · FastAPI · aiosqlite  |
-| Frontend | React 18 · Vite · Tailwind CSS|
-| Database | SQLite                        |
-| AI       | Anthropic Claude API          |
-
----
-
-## Project Structure
-
-```
-HireTheFire/
-├── backend/
-│   ├── app/
-│   │   ├── main.py               # FastAPI app entry point
-│   │   ├── database.py           # SQLite init & connection
-│   │   ├── models.py             # Pydantic models
-│   │   ├── routers/
-│   │   │   ├── jobs.py           # Job listing, scraping, status
-│   │   │   └── cover_letters.py  # Cover letter generation & resume
-│   │   ├── scrapers/
-│   │   │   ├── base.py           # Base scraper class
-│   │   │   ├── indeed.py
-│   │   │   ├── linkedin.py
-│   │   │   └── glassdoor.py
-│   │   └── services/
-│   │       └── cover_letter_service.py  # Claude API integration
-│   ├── resume.txt                # Your resume (edit this!)
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── components/
-│   │   │   ├── Header.jsx
-│   │   │   ├── FilterPanel.jsx
-│   │   │   ├── JobCard.jsx
-│   │   │   ├── CoverLetterModal.jsx
-│   │   │   └── StatusBadge.jsx
-│   │   └── api/client.js
-│   ├── index.html
-│   ├── package.json
-│   └── vite.config.js
-├── .env.example
-└── README.md
-```
-
----
-
-## Setup
-
-### Prerequisites
+## Prerequisites
 
 - Python 3.11+
 - Node.js 18+
 - An [Anthropic API key](https://console.anthropic.com/)
 
-### 1. Clone and configure environment
+---
+
+## Setup
+
+### 1. Clone the repo
 
 ```bash
-cp .env.example .env
+git clone https://github.com/adityacd/HireTheFire.git
+cd HireTheFire
 ```
 
-Open `.env` and set your key:
+### 2. Configure environment
+
+```bash
+cp .env.example backend/.env
+```
+
+Open `backend/.env` and fill in your Anthropic key:
 
 ```
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### 2. Backend
+### 3. Start the backend
 
 ```bash
 cd backend
 python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The API will be available at `http://localhost:8000`.
-Interactive docs: `http://localhost:8000/docs`
+Backend runs at `http://localhost:8000`.
 
-### 3. Frontend
+### 4. Start the frontend
 
-In a separate terminal:
+In a new terminal:
 
 ```bash
 cd frontend
@@ -109,43 +65,27 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser.
+Open `http://localhost:5173`.
 
-### 4. Add your resume
+### 5. Add your resume
 
-Edit `backend/resume.txt` with your actual resume content, **or** click **My Resume** in the app header to edit it in the UI.
-
----
-
-## Usage
-
-1. Enter a job title and location in the **Search New Jobs** panel and click **Search Jobs**.
-2. Jobs scraped from LinkedIn, Indeed, and Glassdoor will appear on the dashboard.
-3. Click **Interested**, **Applied**, or **Skip** on any job card to track your status.
-4. Click **Cover Letter** on any card to generate a personalized cover letter with Claude.
-5. Use the filter inputs to narrow down results by title, location, source, or status.
+Click **My Resume** in the top-right of the app and paste your resume. This is what Claude uses for scoring.
 
 ---
 
-## Notes on Scraping
+## How to use
 
-Web scraping is inherently fragile. The scrapers use `httpx` + `BeautifulSoup` with realistic browser headers, but:
-
-- **LinkedIn** uses their public guest jobs API endpoint, which does not require authentication.
-- **Indeed** and **Glassdoor** parse their HTML search results pages.
-- If a platform updates their HTML structure, the corresponding scraper in `backend/app/scrapers/` may need updating.
-- You may encounter rate limiting or CAPTCHAs — reduce scrape frequency if this happens.
+1. Enter a job title and location in the left panel and click **Search Jobs**
+2. Jobs from LinkedIn, Indeed, and Glassdoor appear on the dashboard
+3. Click **Score with Resume** on any card to get an AI compatibility score
+4. Or click **Score All** at the top to score every job at once
+5. Mark jobs as **Interested**, **Applied**, or **Skip** to track your progress
+6. Use the filter inputs to narrow results
 
 ---
 
-## API Reference
+## Notes
 
-| Method | Endpoint                         | Description                     |
-|--------|----------------------------------|---------------------------------|
-| GET    | `/api/jobs`                      | List jobs (supports filters)    |
-| POST   | `/api/jobs/scrape`               | Trigger scraping                |
-| PATCH  | `/api/jobs/{id}/status`          | Update job status               |
-| GET    | `/api/jobs/{id}/cover-letter`    | Get existing cover letter       |
-| POST   | `/api/jobs/{id}/cover-letter`    | Generate cover letter with AI   |
-| GET    | `/api/resume`                    | Get resume text                 |
-| PUT    | `/api/resume`                    | Update resume text              |
+- Scraping is inherently fragile. If a platform changes its structure, the scraper in `backend/app/scrapers/` may need updating.
+- LinkedIn uses their public guest API (no login required). Indeed uses RSS.
+- Scores are stored in the database and persist across sessions.
