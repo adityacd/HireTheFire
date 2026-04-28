@@ -27,7 +27,7 @@ const EXPERIENCE_LEVELS = [
 const inputCls =
   "w-full rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-700 focus:outline-none transition-all duration-200 focus:ring-1 border border-white/6 hover:border-white/10";
 
-const inputStyle = { background: "#5E4885" };
+const inputStyle = { background: "#0E1818" };
 
 export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
   const [scraping, setScraping] = useState(false);

@@ -117,10 +117,10 @@ h1, h2, h3, h4, h5, h6, .font-display {
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,255,170,0.55); }
 
 /* ── Select / autofill dark override ─────────────────────────────── */
-select option { background: #5E4885; color: #e2e8f0; }
+select option { background: #0E1818; color: #e2e8f0; }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #5E4885 inset;
+  -webkit-box-shadow: 0 0 0 1000px #0E1818 inset;
   -webkit-text-fill-color: #e2e8f0;
 }
