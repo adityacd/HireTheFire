@@ -111,10 +111,10 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(190,24,93,0.7); }
 
 /* ── Select / autofill dark override ─────────────────────────────── */
-select option { background: #0E172A; color: #f1f5f9; }
+select option { background: #0c1120; color: #f1f5f9; }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #0E172A inset;
+  -webkit-box-shadow: 0 0 0 1000px #0c1120 inset;
   -webkit-text-fill-color: #f1f5f9;
 }

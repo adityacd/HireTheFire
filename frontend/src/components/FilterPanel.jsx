@@ -25,7 +25,9 @@ const EXPERIENCE_LEVELS = [
 ];
 
 const inputCls =
-  "w-full rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition-all duration-200 focus:ring-1 focus:ring-indigo-500/60 bg-white/5 border border-white/8 hover:border-white/12";
+  "w-full rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition-all duration-200 focus:ring-1 focus:ring-pink-500/40 border border-white/8 hover:border-white/12";
+
+const inputStyle = { background: "#0c1120" };
 
 export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
   const [scraping, setScraping] = useState(false);
@@ -73,7 +75,7 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
             value={scrapeTitle}
             onChange={(e) => setScrapeTitle(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleScrape()}
-            className={inputCls}
+            className={inputCls} style={inputStyle}
           />
           <input
             type="text"
@@ -81,12 +83,12 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
             value={scrapeLocation}
             onChange={(e) => setScrapeLocation(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleScrape()}
-            className={inputCls}
+            className={inputCls} style={inputStyle}
           />
           <select
             value={scrapeExp}
             onChange={(e) => setScrapeExp(e.target.value)}
-            className={inputCls}
+            className={inputCls} style={inputStyle}
           >
             {EXPERIENCE_LEVELS.map((l) => (
               <option key={l.value} value={l.value}>{l.label}</option>
@@ -129,19 +131,19 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
             placeholder="Title…"
             value={filters.title || ""}
             onChange={(e) => onChange({ ...filters, title: e.target.value })}
-            className={inputCls}
+            className={inputCls} style={inputStyle}
           />
           <input
             type="text"
             placeholder="Location…"
             value={filters.location || ""}
             onChange={(e) => onChange({ ...filters, location: e.target.value })}
-            className={inputCls}
+            className={inputCls} style={inputStyle}
           />
           <select
             value={filters.status || ""}
             onChange={(e) => onChange({ ...filters, status: e.target.value })}
-            className={inputCls}
+            className={inputCls} style={inputStyle}
           >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
@@ -150,7 +152,7 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
           <select
             value={filters.source || ""}
             onChange={(e) => onChange({ ...filters, source: e.target.value })}
-            className={inputCls}
+            className={inputCls} style={inputStyle}
           >
             {SOURCES.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
