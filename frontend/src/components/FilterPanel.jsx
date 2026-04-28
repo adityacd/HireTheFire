@@ -25,7 +25,7 @@ const EXPERIENCE_LEVELS = [
 ];
 
 const inputCls =
-  "w-full rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition-all duration-200 focus:ring-1 focus:ring-indigo-500/60 bg-white/5 border border-white/8 hover:border-white/12";
+  "w-full rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-700 focus:outline-none transition-all duration-200 focus:ring-1 bg-white/3 border border-white/6 hover:border-white/10";
 
 export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
   const [scraping, setScraping] = useState(false);
@@ -63,7 +63,7 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
     <div className="glass gradient-border rounded-2xl p-5 space-y-6 shadow-glass">
       {/* Search */}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-slate-600 mb-3">
           Search Jobs
         </p>
         <div className="space-y-2.5">
@@ -98,18 +98,20 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
           onClick={handleScrape}
           disabled={scraping}
           className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-all duration-200 hover:shadow-btn-glow hover:brightness-110"
-          style={{ background: "linear-gradient(135deg, #BE185D, #9d174d)" }}
+          style={{ background: "linear-gradient(135deg, #00ffaa, #007a52)", color: "#080c10" }}
         >
           {scraping ? <Loader2 size={15} className="animate-spin" /> : <Search size={15} />}
           {scraping ? "Searching…" : "Search Jobs"}
         </button>
 
         {scrapeMsg && (
-          <p className={`mt-2.5 text-xs rounded-xl px-3 py-2 ${
-            scrapeMsg.type === "error"
-              ? "text-red-400 bg-red-500/10 border border-red-500/20"
-              : "text-pink-300 bg-pink-500/10 border border-pink-500/20"
-          }`}>
+          <p
+            className="mt-2.5 text-xs rounded-xl px-3 py-2 border"
+            style={scrapeMsg.type === "error"
+              ? { color: "#f87171", background: "rgba(239,68,68,0.08)", borderColor: "rgba(239,68,68,0.2)" }
+              : { color: "#00ffaa", background: "rgba(0,255,170,0.05)", borderColor: "rgba(0,255,170,0.2)" }
+            }
+          >
             {scrapeMsg.text}
           </p>
         )}
@@ -119,7 +121,7 @@ export default function FilterPanel({ filters, onChange, onScrapeComplete }) {
 
       {/* Filters */}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3 flex items-center gap-1.5">
+        <p className="text-xs font-semibold uppercase tracking-widest text-slate-600 mb-3 flex items-center gap-1.5">
           <SlidersHorizontal size={12} />
           Filter
         </p>

@@ -10,39 +10,39 @@ const DEBOUNCE_MS = 400;
 const METRIC_CARDS = [
   {
     key: "total",
-    label: "Total Jobs",
+    label: "Total",
     icon: Briefcase,
-    color: "#f472b6",
-    bg: "rgba(190,24,93,0.12)",
-    border: "rgba(190,24,93,0.25)",
-    glow: "rgba(190,24,93,0.12)",
+    color: "#00ffaa",
+    bg: "rgba(0,255,170,0.06)",
+    border: "rgba(0,255,170,0.15)",
+    glow: "rgba(0,255,170,0.08)",
   },
   {
     key: "interested",
     label: "Interested",
     icon: Star,
-    color: "#f9a8d4",
-    bg: "rgba(190,24,93,0.08)",
-    border: "rgba(190,24,93,0.2)",
-    glow: "rgba(190,24,93,0.08)",
+    color: "#00cc88",
+    bg: "rgba(0,204,136,0.06)",
+    border: "rgba(0,204,136,0.15)",
+    glow: "rgba(0,204,136,0.06)",
   },
   {
     key: "applied",
     label: "Applied",
     icon: CheckCircle2,
-    color: "#c4b5fd",
-    bg: "rgba(139,92,246,0.1)",
-    border: "rgba(139,92,246,0.22)",
-    glow: "rgba(139,92,246,0.08)",
+    color: "#9d7ec9",
+    bg: "rgba(123,94,167,0.08)",
+    border: "rgba(123,94,167,0.2)",
+    glow: "rgba(123,94,167,0.06)",
   },
   {
     key: "skipped",
     label: "Skipped",
     icon: XCircle,
-    color: "#fca5a5",
-    bg: "rgba(239,68,68,0.08)",
-    border: "rgba(239,68,68,0.18)",
-    glow: "rgba(239,68,68,0.06)",
+    color: "#f87171",
+    bg: "rgba(239,68,68,0.06)",
+    border: "rgba(239,68,68,0.15)",
+    glow: "rgba(239,68,68,0.04)",
   },
 ];
 
@@ -125,7 +125,7 @@ export default function App() {
 
           {/* Metric cards dashboard */}
           <div className="glass gradient-border rounded-2xl p-4 shadow-glass space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+            <p className="text-xs font-display font-semibold uppercase tracking-widest" style={{ color: "#334155" }}>
               Dashboard
             </p>
             <div className="grid grid-cols-2 gap-2.5">
@@ -199,9 +199,9 @@ export default function App() {
                   disabled={scoringAll || jobs.every((j) => j.compatibility_score != null)}
                   className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 disabled:opacity-40 hover:brightness-110"
                   style={{
-                    color: "#f472b6",
-                    border: "1px solid rgba(190,24,93,0.35)",
-                    background: scoringAll ? "rgba(190,24,93,0.12)" : "rgba(190,24,93,0.06)",
+                    color: "#00ffaa",
+                    border: "1px solid rgba(0,255,170,0.25)",
+                    background: scoringAll ? "rgba(0,255,170,0.08)" : "rgba(0,255,170,0.03)",
                   }}
                 >
                   {scoringAll ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}

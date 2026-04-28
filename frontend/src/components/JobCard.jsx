@@ -4,23 +4,23 @@ import StatusBadge from "./StatusBadge";
 import { updateJobStatus, scoreJob } from "../api/client";
 
 const SOURCE_PILL = {
-  linkedin:  { bg: "rgba(59,130,246,0.15)",  color: "#93c5fd", border: "rgba(59,130,246,0.25)"  },
-  indeed:    { bg: "rgba(168,85,247,0.15)",   color: "#d8b4fe", border: "rgba(168,85,247,0.25)"  },
-  glassdoor: { bg: "rgba(16,185,129,0.15)",   color: "#6ee7b7", border: "rgba(16,185,129,0.25)"  },
+  linkedin:  { bg: "rgba(0,255,170,0.06)",  color: "#00cc88", border: "rgba(0,255,170,0.2)"   },
+  indeed:    { bg: "rgba(123,94,167,0.12)", color: "#9d7ec9", border: "rgba(123,94,167,0.25)" },
+  glassdoor: { bg: "rgba(0,255,170,0.08)",  color: "#00ffaa", border: "rgba(0,255,170,0.22)"  },
 };
 
 const EXP_LABELS = { entry: "Entry", mid: "Mid", senior: "Senior" };
 
 const STATUS_ACTIONS = [
-  { value: "interested", label: "Interested", color: "#f9a8d4", border: "rgba(190,24,93,0.3)",   hoverBg: "rgba(190,24,93,0.1)"  },
-  { value: "applied",    label: "Applied",    color: "#c4b5fd", border: "rgba(139,92,246,0.3)",  hoverBg: "rgba(139,92,246,0.1)" },
-  { value: "skip",       label: "Skip",       color: "#fca5a5", border: "rgba(239,68,68,0.25)",  hoverBg: "rgba(239,68,68,0.08)" },
+  { value: "interested", label: "Interested", color: "#00ffaa", border: "rgba(0,255,170,0.3)",   hoverBg: "rgba(0,255,170,0.07)"  },
+  { value: "applied",    label: "Applied",    color: "#9d7ec9", border: "rgba(123,94,167,0.35)", hoverBg: "rgba(123,94,167,0.1)"  },
+  { value: "skip",       label: "Skip",       color: "#f87171", border: "rgba(239,68,68,0.25)",  hoverBg: "rgba(239,68,68,0.08)"  },
 ];
 
 function scoreTheme(score) {
-  if (score >= 75) return { text: "#4ade80", bar: "linear-gradient(90deg,#16a34a,#4ade80)", glow: "rgba(74,222,128,0.25)" };
-  if (score >= 50) return { text: "#fbbf24", bar: "linear-gradient(90deg,#d97706,#fbbf24)", glow: "rgba(251,191,36,0.2)"  };
-  return              { text: "#f87171", bar: "linear-gradient(90deg,#dc2626,#f87171)", glow: "rgba(248,113,113,0.2)"  };
+  if (score >= 75) return { text: "#00ffaa", bar: "linear-gradient(90deg,#007a52,#00ffaa)", glow: "rgba(0,255,170,0.3)"  };
+  if (score >= 50) return { text: "#9d7ec9", bar: "linear-gradient(90deg,#5a4480,#9d7ec9)", glow: "rgba(123,94,167,0.3)" };
+  return              { text: "#f87171", bar: "linear-gradient(90deg,#dc2626,#f87171)", glow: "rgba(248,113,113,0.2)" };
 }
 
 export default function JobCard({ job, onStatusChange, onScoreChange }) {
@@ -71,14 +71,17 @@ export default function JobCard({ job, onStatusChange, onScoreChange }) {
             <StatusBadge status={job.status} />
             {job.experience_level && EXP_LABELS[job.experience_level] && (
               <span className="text-xs font-medium px-2 py-0.5 rounded-full"
-                style={{ background: "rgba(148,163,184,0.1)", color: "#94a3b8", border: "1px solid rgba(148,163,184,0.18)" }}>
+                style={{ background: "rgba(123,94,167,0.08)", color: "#7b5ea7", border: "1px solid rgba(123,94,167,0.2)" }}>
                 {EXP_LABELS[job.experience_level]}
               </span>
             )}
           </div>
           {job.url && (
             <a href={job.url} target="_blank" rel="noopener noreferrer"
-              className="shrink-0 p-1.5 rounded-lg text-slate-600 hover:text-white hover:bg-white/8 transition-colors"
+              className="shrink-0 p-1.5 rounded-lg transition-colors"
+              style={{ color: "#334155" }}
+              onMouseEnter={e => e.currentTarget.style.color = "#00ffaa"}
+              onMouseLeave={e => e.currentTarget.style.color = "#334155"}
               title="Open listing">
               <ExternalLink size={15} />
             </a>
@@ -87,8 +90,10 @@ export default function JobCard({ job, onStatusChange, onScoreChange }) {
 
         {/* Title + meta */}
         <div>
-          <h3 className="font-semibold text-white text-[15px] leading-snug line-clamp-2">{job.title}</h3>
-          <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">
+          <h3 className="font-display font-semibold text-white text-[14px] leading-snug line-clamp-2 tracking-wide">
+            {job.title}
+          </h3>
+          <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs" style={{ color: "#475569" }}>
             <span className="flex items-center gap-1"><Building2 size={11} />{job.company}</span>
             {job.location && <span className="flex items-center gap-1"><MapPin size={11} />{job.location}</span>}
             {job.date_posted && <span className="flex items-center gap-1"><Calendar size={11} />{job.date_posted}</span>}
@@ -100,29 +105,30 @@ export default function JobCard({ job, onStatusChange, onScoreChange }) {
         {/* Score section */}
         {score !== null ? (
           <div className="rounded-xl overflow-hidden"
-            style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.03)" }}>
+            style={{ border: "1px solid rgba(0,255,170,0.1)", background: "rgba(0,255,170,0.02)" }}>
             <button
               onClick={() => setShowReasoning(v => !v)}
-              className="w-full px-3 py-2.5 flex items-center justify-between gap-3 hover:bg-white/3 transition-colors"
+              className="w-full px-3 py-2.5 flex items-center justify-between gap-3 transition-colors"
+              style={{ hover: "background: rgba(0,255,170,0.03)" }}
             >
               <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                <span className="text-sm font-black tabular-nums shrink-0" style={{ color: theme.text }}>
+                <span className="text-sm font-bold tabular-nums shrink-0 font-display" style={{ color: theme.text }}>
                   {Math.round(score)}%
                 </span>
-                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
+                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
                   <div
                     className="h-full rounded-full score-bar"
                     style={{ width: `${score}%`, background: theme.bar, boxShadow: `0 0 8px ${theme.glow}` }}
                   />
                 </div>
-                <span className="text-xs text-slate-500 shrink-0">match</span>
+                <span className="text-xs shrink-0" style={{ color: "#334155" }}>match</span>
               </div>
               {showReasoning
-                ? <ChevronUp size={13} className="text-slate-600 shrink-0" />
-                : <ChevronDown size={13} className="text-slate-600 shrink-0" />}
+                ? <ChevronUp size={13} style={{ color: "#334155" }} className="shrink-0" />
+                : <ChevronDown size={13} style={{ color: "#334155" }} className="shrink-0" />}
             </button>
             {showReasoning && reasoning && (
-              <p className="px-3 pb-3 pt-2 text-xs text-slate-400 leading-relaxed border-t border-white/5">
+              <p className="px-3 pb-3 pt-2 text-xs leading-relaxed border-t" style={{ color: "#64748b", borderColor: "rgba(0,255,170,0.08)" }}>
                 {reasoning}
               </p>
             )}
@@ -132,7 +138,7 @@ export default function JobCard({ job, onStatusChange, onScoreChange }) {
             onClick={handleScore}
             disabled={scoring}
             className="w-full py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all duration-150 disabled:opacity-50"
-            style={{ color: "#f472b6", border: "1px solid rgba(190,24,93,0.3)", background: scoring ? "rgba(190,24,93,0.1)" : "rgba(190,24,93,0.05)" }}
+            style={{ color: "#00ffaa", border: "1px solid rgba(0,255,170,0.25)", background: scoring ? "rgba(0,255,170,0.07)" : "rgba(0,255,170,0.03)" }}
           >
             {scoring ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
             {scoring ? "Scoring…" : "Score with Resume"}
@@ -140,7 +146,7 @@ export default function JobCard({ job, onStatusChange, onScoreChange }) {
         )}
 
         {/* Action buttons */}
-        <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-white/5">
+        <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t" style={{ borderColor: "rgba(0,255,170,0.07)" }}>
           {STATUS_ACTIONS.filter((a) => a.value !== job.status).map((action) => (
             <button
               key={action.value}
@@ -159,7 +165,8 @@ export default function JobCard({ job, onStatusChange, onScoreChange }) {
           ))}
           {job.status === "skip" && (
             <button onClick={() => handleStatus("new")}
-              className="px-3 py-1 rounded-lg text-xs font-medium text-slate-500 border border-white/8 hover:border-white/15 hover:text-slate-300 transition-all">
+              className="px-3 py-1 rounded-lg text-xs font-medium transition-all"
+              style={{ color: "#475569", border: "1px solid rgba(255,255,255,0.07)" }}>
               Restore
             </button>
           )}
@@ -167,7 +174,8 @@ export default function JobCard({ job, onStatusChange, onScoreChange }) {
             <button
               onClick={handleScore}
               disabled={scoring}
-              className="ml-auto px-2.5 py-1 rounded-lg text-xs text-slate-600 border border-white/6 hover:text-slate-400 hover:border-white/12 transition-all disabled:opacity-40 flex items-center gap-1"
+              className="ml-auto px-2.5 py-1 rounded-lg text-xs transition-all disabled:opacity-40 flex items-center gap-1"
+              style={{ color: "#334155", border: "1px solid rgba(255,255,255,0.06)" }}
             >
               {scoring ? <Loader2 size={10} className="animate-spin" /> : <Zap size={10} />}
               Re-score
